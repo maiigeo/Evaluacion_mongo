@@ -1,0 +1,60 @@
+#version: "3"
+#services:
+#  api-springprueba:
+#    image: carlosmero/api-springprueba:latest
+
+#    networks:
+#      - net_tendencias_m5a 
+#    container_name: api-springprueba
+#    depends_on:
+#      - mero_bd_container 
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mero_bd_container /mero_bd_container ?allowPublicKeyRetrieval=true
+#      - SPRING_DATASOURCE_USERNAME=mysqluser
+#      - SPRING_DATASOURCE_PASSWORD=secret
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+#      - SPRING_JPA_SHOW_SQL=true
+#      - SPRING_DATASOURCE.CACHEPREPSTMTS=false
+#    ports:
+#      - 8082:8080
+
+#  mero_bd_container :
+#    image: mysql:8
+#    networks:
+#      - net_tendencias_m5a 
+#    container_name: mero_bd_container 
+#    ports:
+#      - 3307:3306
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=secret
+#      - MYSQL_DATABASE=mero_bd_container 
+#      - MYSQL_USER=mysqluser
+#      - MYSQL_PASSWORD=secret
+#    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    
+#networks:
+#  net_tendencias_m5a :  
+version: '3.3'
+services:
+  app:
+    build: .
+    ports:
+      - 1998:8080
+    depends_on:
+      - mongo
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: bd_mongito
+    
+  mongo:
+    image: mongo
+    container_name: mongodbhola
+    restart: always
+   
+    ports:
+      - 2003:27017
+    
+
+volumes:
+  mongo-data:
